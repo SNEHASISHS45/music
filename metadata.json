@@ -1,0 +1,7 @@
+{
+  "name": "Nove",
+  "description": "A futuristic music discovery platform featuring a pro audio engine, EQ, dynamic lyrics, and 2026 UX patterns.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
