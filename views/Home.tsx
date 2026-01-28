@@ -115,14 +115,21 @@ const HomeView: React.FC<HomeViewProps> = ({ onTrackSelect, onPlayNext, onAddToQ
   return (
     <div
       ref={containerRef}
-      className="bg-yt-black min-h-screen pb-32 pt-4 overflow-y-auto"
+      className="bg-yt-black min-h-screen pb-32 pt-4 overflow-y-auto relative"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
+      {/* Ambient Glows */}
+      <div className="absolute top-0 left-0 right-0 h-[400px] overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-[100px] -left-[100px] size-[300px] bg-primary/20 rounded-full blur-[100px] animate-pulse-slow" />
+        <div className="absolute -top-[50px] right-0 size-[250px] bg-purple-600/20 rounded-full blur-[80px] animate-float" />
+        <div className="absolute top-[100px] left-1/2 -translate-x-1/2 size-[200px] bg-blue-500/10 rounded-full blur-[100px]" />
+      </div>
+
       {/* Pull to Refresh Indicator */}
       <div
-        className="flex justify-center items-center overflow-hidden transition-all duration-300"
+        className="flex justify-center items-center overflow-hidden transition-all duration-300 relative z-10"
         style={{ height: isRefreshing ? 60 : pullDistance }}
       >
         <div className={`size-8 border-2 border-primary border-t-transparent rounded-full ${isRefreshing ? 'animate-spin' : ''}`}
@@ -133,31 +140,30 @@ const HomeView: React.FC<HomeViewProps> = ({ onTrackSelect, onPlayNext, onAddToQ
         />
       </div>
 
-      <header className="px-4 mb-6">
-        <div className="flex items-center justify-between mb-6">
+      <header className="px-4 mb-8 relative z-10">
+        <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-2">
-            <img src="/logo.png" className="size-8 rounded-lg" alt="Nove" />
-            <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-white/40 bg-clip-text text-transparent">Nove</span>
+            <span className="text-2xl font-black tracking-tight bg-gradient-to-br from-white via-white to-white/30 bg-clip-text text-transparent">Nove</span>
           </div>
           <div className="flex items-center gap-5">
-            <span className="material-symbols-outlined text-white text-2xl">cast</span>
-            <button onClick={onSearchClick} className="flex items-center justify-center">
+            <span className="material-symbols-outlined text-white/50 text-2xl hover:text-white transition-colors cursor-pointer">cast</span>
+            <button onClick={onSearchClick} className="flex items-center justify-center size-10 bg-white/5 rounded-full hover:bg-white/10 transition-colors">
               <span className="material-symbols-outlined text-white text-2xl">search</span>
             </button>
             <ProfileImage
               src={user?.photoURL}
               displayName={user?.displayName}
-              className="size-7 rounded-full"
+              className="size-8 rounded-full border border-white/10"
             />
           </div>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto hide-scrollbar">
+        <div className="flex gap-2.5 overflow-x-auto hide-scrollbar">
           {chips.map(chip => (
             <button
               key={chip}
               onClick={() => setActiveChip(chip)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap transition-all border border-white/10 active:scale-95 ${activeChip === chip ? 'bg-white text-black border-white' : 'bg-white/10 text-white'}`}
+              className={`px-5 py-2.5 rounded-2xl text-xs font-bold whitespace-nowrap transition-all border active:scale-95 ${activeChip === chip ? 'bg-white text-black border-white shadow-lg shadow-white/10' : 'bg-white/5 text-white/60 border-white/5 hover:border-white/10'}`}
             >
               {chip}
             </button>
@@ -165,7 +171,7 @@ const HomeView: React.FC<HomeViewProps> = ({ onTrackSelect, onPlayNext, onAddToQ
         </div>
       </header>
 
-      <main className="space-y-10">
+      <main className="space-y-12 relative z-10">
         {/* Recently Played - Only show if there's history */}
         {recentlyPlayed.length > 0 && (
           <section className="px-4">

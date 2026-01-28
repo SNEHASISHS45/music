@@ -258,31 +258,34 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose, onTrackS
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 z-[150] bg-yt-black animate-fade-in flex flex-col">
-            <header className="px-4 py-2 bg-yt-surface flex items-center gap-2 border-b border-white/5">
-                <button onClick={() => selectedChannel ? setSelectedChannel(null) : onClose()} className="size-10 flex items-center justify-center hover:bg-white/10 rounded-full">
-                    <span className="material-symbols-outlined">arrow_back</span>
+        <div className="fixed inset-0 z-[150] bg-black animate-fade-in flex flex-col">
+            <header className="px-4 py-3 bg-white/5 backdrop-blur-3xl flex items-center gap-3 border-b border-white/5">
+                <button
+                    onClick={() => selectedChannel ? setSelectedChannel(null) : onClose()}
+                    className="size-11 flex items-center justify-center hover:bg-white/10 active:bg-white/20 rounded-full transition-colors"
+                >
+                    <span className="material-symbols-outlined text-white">arrow_back</span>
                 </button>
-                <div className="flex-1 relative">
+                <div className="flex-1 relative bg-white/5 rounded-2xl flex items-center px-1">
                     {!selectedChannel ? (
                         <input
                             ref={inputRef}
                             type="text"
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
-                            placeholder="Search songs, videos, podcasts, channels"
-                            className="w-full bg-transparent border-none focus:ring-0 text-white placeholder:text-yt-gray h-12"
+                            placeholder="Search everything..."
+                            className="flex-1 bg-transparent border-none focus:ring-0 text-white placeholder:text-white/30 h-11 text-base font-medium px-3"
                         />
                     ) : (
-                        <div className="flex flex-col justify-center h-12">
-                            <p className="text-white font-bold leading-tight truncate">{selectedChannel.name}</p>
-                            <p className="text-[10px] text-yt-gray font-bold tracking-widest uppercase">Channel Profile</p>
+                        <div className="flex flex-col justify-center h-11 px-3">
+                            <p className="text-white font-black leading-tight truncate">{selectedChannel.name}</p>
+                            <p className="text-[10px] text-primary font-black tracking-widest uppercase">Channel Profile</p>
                         </div>
                     )}
                     {query && !selectedChannel && (
                         <button
                             onClick={() => setQuery('')}
-                            className="absolute right-0 top-1/2 -translate-y-1/2 size-10 flex items-center justify-center text-yt-gray"
+                            className="size-10 flex items-center justify-center text-white/40 hover:text-white transition-colors"
                         >
                             <span className="material-symbols-outlined">close</span>
                         </button>
@@ -292,22 +295,22 @@ const SearchOverlay: React.FC<SearchOverlayProps> = ({ isOpen, onClose, onTrackS
 
             {/* Result Tabs - Hide when on channel profile */}
             {query && totalResults > 0 && !isLoading && !selectedChannel && (
-                <div className="flex gap-2 px-4 py-3 border-b border-white/5 overflow-x-auto hide-scrollbar">
+                <div className="flex gap-2.5 px-4 py-4 border-b border-white/5 overflow-x-auto hide-scrollbar bg-black/40 backdrop-blur-md">
                     <button
                         onClick={() => setActiveTab('all')}
-                        className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${activeTab === 'all' ? 'bg-white text-black' : 'bg-white/10 text-white'}`}
+                        className={`px-6 py-2 rounded-2xl text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all border active:scale-95 ${activeTab === 'all' ? 'bg-white text-black border-white shadow-lg shadow-white/10' : 'bg-white/5 text-white/40 border-white/5 hover:border-white/10'}`}
                     >
                         All
                     </button>
                     <button
                         onClick={() => setActiveTab('songs')}
-                        className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${activeTab === 'songs' ? 'bg-white text-black' : 'bg-white/10 text-white'}`}
+                        className={`px-6 py-2 rounded-2xl text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all border active:scale-95 ${activeTab === 'songs' ? 'bg-white text-black border-white shadow-lg shadow-white/10' : 'bg-white/5 text-white/40 border-white/5 hover:border-white/10'}`}
                     >
                         Songs ({results.length})
                     </button>
                     <button
                         onClick={() => setActiveTab('videos')}
-                        className={`px-4 py-2 rounded-full text-sm font-bold whitespace-nowrap transition-all ${activeTab === 'videos' ? 'bg-white text-black' : 'bg-white/10 text-white'}`}
+                        className={`px-6 py-2 rounded-2xl text-xs font-black uppercase tracking-wider whitespace-nowrap transition-all border active:scale-95 ${activeTab === 'videos' ? 'bg-white text-black border-white shadow-lg shadow-white/10' : 'bg-white/5 text-white/40 border-white/5 hover:border-white/10'}`}
                     >
                         Videos ({videoResults.length})
                     </button>

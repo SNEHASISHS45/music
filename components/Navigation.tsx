@@ -16,25 +16,32 @@ const Navigation: React.FC<NavigationProps> = ({ currentScreen, onNavigate }) =>
   ];
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-gradient-to-t from-black via-black/95 to-transparent pt-6 pb-2">
-      <div className="flex items-center justify-around px-4">
+    <nav className="fixed bottom-0 left-0 right-0 z-[120] bg-black/80 backdrop-blur-3xl border-t border-white/5 pt-1.5 pb-1.5 px-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      <div className="flex items-center justify-around max-w-lg mx-auto">
         {tabs.map(tab => {
           const isActive = currentScreen === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => onNavigate(tab.id)}
-              className={`relative flex flex-col items-center justify-center gap-1 py-2 px-4 rounded-2xl transition-all active:scale-90 ${isActive ? 'text-white' : 'text-white/40'}`}
+              className="group relative flex flex-col items-center justify-center gap-0.5 transition-all active:scale-95 flex-1"
             >
-              {/* Active Indicator */}
-              {isActive && (
-                <div className="absolute inset-0 bg-white/10 rounded-2xl animate-pulse-subtle" />
-              )}
-
-              <span className={`material-symbols-outlined text-2xl relative z-10 transition-transform ${isActive ? 'fill-1 scale-110' : ''}`}>
-                {tab.icon}
-              </span>
-              <span className={`text-[10px] font-semibold relative z-10 transition-all ${isActive ? 'opacity-100' : 'opacity-60'}`}>
+              {/* Material You Pill Indicator */}
+              <div className={`
+                relative px-6 py-1 rounded-full transition-all duration-300
+                ${isActive ? 'bg-primary/20 scale-110 shadow-[0_0_20px_rgba(255,0,0,0.1)]' : 'bg-transparent'}
+              `}>
+                <span className={`
+                    material-symbols-outlined text-xl transition-all duration-300
+                    ${isActive ? 'text-primary fill-1' : 'text-white/40'}
+                `}>
+                  {tab.icon}
+                </span>
+              </div>
+              <span className={`
+                text-[9px] font-bold tracking-tight transition-all duration-300
+                ${isActive ? 'text-primary' : 'text-white/40'}
+              `}>
                 {tab.label}
               </span>
             </button>

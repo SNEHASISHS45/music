@@ -9,6 +9,7 @@ interface MiniPlayerProps {
   duration: number;
   onTogglePlay: () => void;
   onClick: () => void;
+  onNext?: () => void;
   onPrevious?: () => void;
   onDismiss?: () => void;
 }
@@ -64,56 +65,53 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
 
   return (
     <div
-      className="fixed bottom-[72px] left-3 right-3 z-50 animate-fade-in"
+      className="fixed bottom-[76px] left-3 right-3 z-[110] animate-fade-in"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
       <div
-        className="bg-[#1a1a1a] rounded-xl overflow-hidden shadow-2xl border border-white/10 transition-transform"
+        className="bg-[#1a1a1c] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/[0.08] transition-all hover:bg-[#222225]"
         style={{
           transform: `translate(${swipeOffset.x}px, ${swipeOffset.y}px)`,
-          transition: isSwiping ? 'none' : 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)'
+          transition: isSwiping ? 'none' : 'transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s'
         }}
       >
-        {/* Progress Bar */}
-        <div className="h-[3px] bg-white/10 w-full">
+        <div className="flex items-center gap-3 p-2.5 pr-4 relative">
+          {/* Progress Background Overlay */}
           <div
-            className="h-full bg-primary rounded-r-full transition-all duration-300"
+            className="absolute left-0 bottom-0 top-0 bg-primary/5 transition-all duration-500 rounded-r-2xl"
             style={{ width: `${progress}%` }}
           />
-        </div>
 
-        <div className="flex items-center gap-3 p-2 pr-3">
           {/* Album Art with Equalizer */}
           <div
             onClick={onClick}
-            className="size-12 rounded-lg overflow-hidden flex-shrink-0 relative cursor-pointer group"
+            className="size-11 rounded-xl overflow-hidden flex-shrink-0 relative cursor-pointer group z-10 shadow-lg border border-white/5"
           >
             <img src={track.albumArt} className="size-full object-cover" alt="" />
             {isPlaying && (
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
-                <div className="flex gap-[2px] items-end h-4">
-                  <div className="w-[3px] bg-primary rounded-t animate-eq-1"></div>
-                  <div className="w-[3px] bg-primary rounded-t animate-eq-2"></div>
-                  <div className="w-[3px] bg-primary rounded-t animate-eq-3"></div>
-                  <div className="w-[3px] bg-primary rounded-t animate-eq-4"></div>
+              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                <div className="flex gap-[2px] items-end h-3.5">
+                  <div className="w-[2.5px] bg-primary rounded-t animate-eq-1 shadow-[0_0_8px_rgba(255,0,0,0.5)]"></div>
+                  <div className="w-[2.5px] bg-primary rounded-t animate-eq-2 shadow-[0_0_8px_rgba(255,0,0,0.5)]"></div>
+                  <div className="w-[2.5px] bg-primary rounded-t animate-eq-3 shadow-[0_0_8px_rgba(255,0,0,0.5)]"></div>
                 </div>
               </div>
             )}
           </div>
 
           {/* Track Info */}
-          <div className="flex-1 min-w-0 cursor-pointer" onClick={onClick}>
-            <p className="text-sm font-semibold text-white truncate">{track.title}</p>
-            <p className="text-xs text-white/50 truncate">{track.artist}</p>
+          <div className="flex-1 min-w-0 cursor-pointer z-10 pl-1" onClick={onClick}>
+            <p className="text-sm font-bold text-white truncate leading-tight mb-0.5">{track.title}</p>
+            <p className="text-[11px] font-bold text-white/40 truncate uppercase tracking-widest">{track.artist}</p>
           </div>
 
           {/* Controls */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1 z-10">
             <button
               onClick={(e) => { e.stopPropagation(); onTogglePlay(); }}
-              className="size-11 rounded-full bg-white flex items-center justify-center active:scale-90 transition-transform"
+              className="size-10 rounded-full bg-white flex items-center justify-center active:scale-95 transition-all hover:scale-105 shadow-xl"
             >
               <span className="material-symbols-outlined text-black text-2xl fill-1">
                 {isPlaying ? 'pause' : 'play_arrow'}
@@ -121,35 +119,33 @@ const MiniPlayer: React.FC<MiniPlayerProps> = ({
             </button>
           </div>
         </div>
-
-        {/* Swipe Hint Icons */}
-        {Math.abs(swipeOffset.x) > 20 && (
-          <>
-            <div
-              className="absolute left-4 top-1/2 -translate-y-1/2 transition-opacity"
-              style={{ opacity: swipeOffset.x > 0 ? Math.min(swipeOffset.x / 50, 1) : 0 }}
-            >
-              <span className="material-symbols-outlined text-white/60">skip_previous</span>
-            </div>
-            <div
-              className="absolute right-4 top-1/2 -translate-y-1/2 transition-opacity"
-              style={{ opacity: swipeOffset.x < 0 ? Math.min(Math.abs(swipeOffset.x) / 50, 1) : 0 }}
-            >
-              <span className="material-symbols-outlined text-white/60">skip_next</span>
-            </div>
-          </>
-        )}
       </div>
+
+      {/* Swipe Hint Icons */}
+      {Math.abs(swipeOffset.x) > 20 && (
+        <>
+          <div
+            className="absolute left-4 top-1/2 -translate-y-1/2 transition-opacity pointer-events-none"
+            style={{ opacity: swipeOffset.x > 0 ? Math.min(swipeOffset.x / 50, 1) : 0 }}
+          >
+            <span className="material-symbols-outlined text-white/60">skip_previous</span>
+          </div>
+          <div
+            className="absolute right-4 top-1/2 -translate-y-1/2 transition-opacity pointer-events-none"
+            style={{ opacity: swipeOffset.x < 0 ? Math.min(Math.abs(swipeOffset.x) / 50, 1) : 0 }}
+          >
+            <span className="material-symbols-outlined text-white/60">skip_next</span>
+          </div>
+        </>
+      )}
 
       <style>{`
         @keyframes eq-1 { 0%, 100% { height: 4px; } 50% { height: 14px; } }
         @keyframes eq-2 { 0%, 100% { height: 12px; } 50% { height: 6px; } }
         @keyframes eq-3 { 0%, 100% { height: 8px; } 50% { height: 16px; } }
-        @keyframes eq-4 { 0%, 100% { height: 14px; } 50% { height: 4px; } }
         .animate-eq-1 { animation: eq-1 0.5s ease-in-out infinite; }
         .animate-eq-2 { animation: eq-2 0.6s ease-in-out infinite; }
         .animate-eq-3 { animation: eq-3 0.4s ease-in-out infinite; }
-        .animate-eq-4 { animation: eq-4 0.55s ease-in-out infinite; }
       `}</style>
     </div>
   );
